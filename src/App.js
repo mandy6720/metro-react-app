@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import './App.css';
 
-function App() {
+const App = () => {
+  const [stationList, setStationList] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [selectedStationName, setSelectedStationName] = useState(null);
+  const [currentTrains, setCurrentTrains] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_RAIL_INFO_API}/jStations?api_key=${process.env.REACT_APP_SECRET}`)
+      .then((payload) => setStationList(payload.data.Stations));
+  }, [])
+
+  const handleStationSelect = (event) => {
+    setSelectedStation(event.target.value);
+    axios.get(`${process.env.REACT_APP_PREDICTION_API}/${event.target.value}?api_key=${process.env.REACT_APP_SECRET}`)
+    .then((payload) => {
+      payload.data.Trains.length && setSelectedStationName(payload.data.Trains[0].LocationName)
+      // setting trains for current station
+      setCurrentTrains(payload.data.Trains);
+    });
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <label htmlFor="stations">Stations:</label>
+      {stationList.length && (<select name="stations" onChange={handleStationSelect}>
+        {stationList.map((item) => {
+          return (<option value={item.Code}>{item.Name}</option>);
+        })}
+      </select>)}
+      {selectedStationName && <div>Current Station: {selectedStationName}</div>}
     </div>
   );
 }
