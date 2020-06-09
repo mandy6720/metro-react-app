@@ -1,3 +1,26 @@
+# Metro App
+
+## Desccription
+
+In the DC area, our subway system is called “the Metro” and is run by Washington Metro Area Transit Authority or WMATA for short.
+
+Today, we’re going to be building a project similar to something we had on screens in the WaPo office where you could see the next trains coming for a given station (the WaPo one defaulted to the closest to the office), what the expected arrival times were for each train and which direction that train was going.
+
+How do you get that info? Great question, I’m glad you asked!
+
+You will have to sign up for a free account at https://developer.wmata.com/
+
+Once you create an API key, you’ll need to access the APIs (particularly the Rail Station Info and Predictions ones). Note that you can play around with these api responses to see the structure of the data on the wmata site (for example, you can see the rail stations here).
+
+## Installation
+
+0. Make sure you have node & npm installed! You will also need yarn (run `yarn -v` to check for it. If you don't have it, run `npm i yarn -g`)
+1. From the root of your project run `yarn`
+2. To start up your app in dev mode, run `yarn start`
+3. Give yourself a high five - you did it! 🎉
+
+## CRA Info
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
