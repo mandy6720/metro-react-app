@@ -23,6 +23,53 @@ const App = () => {
     });
   }
 
+  const displayTrains = () => {
+    currentTrains.sort((a,b) => {
+      if (a.DestinationName < b.DestinationName) {
+        return -1;
+      }
+      if (a.DestinationName > b.DestinationName) {
+        return 1;
+      }
+      return 0;
+    });
+
+    const trainsByDesination = {};
+
+    currentTrains.forEach((train) => {
+      // looks for line property on trainsByDestination Obj
+      if (trainsByDesination.hasOwnProperty(train.Line)) {
+        // if line exists, look for desination prop - ex trainsByDestination.Rd.Shadygrove
+          // if exists, add to desintation array
+          if (trainsByDesination[train.Line].hasOwnProperty(train.DestinationCode)) {
+            // destinationCode will be an array of trains if it exists
+            trainsByDesination[train.Line][train.DestinationCode].push(train);
+          }
+          // else create destination prop to line and add train
+          else {
+            trainsByDesination[train.Line][train.DestinationCode] = [train];
+          }
+      }
+        // else add line and desintation
+        else {
+          const newLine = {};
+          // { destination: [] }
+          newLine[train.DestinationCode] = [train];
+          // trainsByDestination: { Rd: { Shadygrove: [] }}
+          trainsByDesination[train.Line] = newLine;
+        }
+    });
+
+    console.log("trainsByDesination", trainsByDesination)
+
+    return (<ul>
+      {currentTrains.map((train) => {
+      const { DestinationName, Line, Min } = train;
+        return (<li>{`${Line} ${DestinationName} will arrive in ${Min} mins`}</li>)
+      })}
+    </ul>);
+  };
+
   return (
     <div className="App">
       <label htmlFor="stations">Stations:</label>
@@ -32,6 +79,7 @@ const App = () => {
         })}
       </select>)}
       {selectedStationName && <div>Current Station: {selectedStationName}</div>}
+      {currentTrains && displayTrains()}
     </div>
   );
 }
